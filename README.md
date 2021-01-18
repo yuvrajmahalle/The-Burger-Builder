@@ -3,7 +3,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## steps to run this project
 
 - [first download repo on your local machine]
-- [inside repo open cmd and type command (npm install)]
+- [inside repo open cmd and type command (npm install) - this will download all the require dependencies]
 - [then npm start]
 
 Below you will find some information on how to perform common tasks.<br>
