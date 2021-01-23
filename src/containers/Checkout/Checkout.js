@@ -1,52 +1,55 @@
-import React,{ Component } from "react";
-import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
+import React, {useState} from 'react';
 import {Route} from 'react-router-dom';
-import ContactData from  './ContactData/ContactData'   ;
-
-class Checkout extends Component{
-
-    state ={
-        ingredients:{
-            salad : 1,
-            meat : 1,
-            cheese : 1,
-            bacon : 1,
+import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
+import ContactData from './ContactData/ContactData';
+//====================================
+const Checkout = props => {
+  const initState = () => {
+    const queryInit = new URLSearchParams(
+      props.location.search
+    );
+    const ingredientsInit = {};
+    let priceInit = 0;
+    for (let param of queryInit.entries()) {
+      if (param[0] === 'price') {
+        priceInit = param[1];
+      } else {
+        ingredientsInit[param[0]] = +param[1];
+      }
+    }
+    return {
+      ingredients: ingredientsInit,
+      totalPrice: priceInit
+    };
+  };
+  const [state] = useState(initState());
+//--------------------------------------
+  const checkoutCancelledHandler = () => {
+    props.history.goBack();
+  };
+  const checkoutContinuedHandler = () => {
+    props.history.replace('/checkout/contact-data');
+  };
+  return (
+    <div>
+      <CheckoutSummary
+        ingredients={state.ingredients}
+        checkoutCancelled={checkoutCancelledHandler}
+        checkoutContinued={checkoutContinuedHandler}
+      />
+      <Route 
+        path={props.match.path + '/contact-data'} 
+        render={
+          props => (
+            <ContactData
+              ingredients={state.ingredients}
+              price={state.totalPrice}
+              {...props}
+            />
+          )
         }
-    }
-
-    componentDidMount() {
-        const query = new URLSearchParams(this.props.location.search);
-        const ingredients = {};
-        for(let param of query.entries()){
-            //['salad','1']
-
-            ingredients[param[0]] = +param[1];
-        }
-        this.setState({ingredients:ingredients})
-    }
-
-    checkoutCancelledHandler = () =>{
-        this.props.history.goBack();
-    }
-
-    checkoutContinuedHandler = () =>{
-        this.props.history.replace('/checkout/contact-data');
-    }
-
-    render(){
-        return(
-            <div>
-                <CheckoutSummary 
-                ingredients={this.state.ingredients}
-                checkoutCancelled={this.checkoutCancelledHandler}
-                checkoutContinued={this.checkoutContinuedHandler}
-                />
-
-                <Route path={this.props.match.path + '/contact-data'} component={ContactData}/>
-
-            </div>
-        );
-    }
-}
-
+      />
+    </div>
+  );
+};
 export default Checkout;
