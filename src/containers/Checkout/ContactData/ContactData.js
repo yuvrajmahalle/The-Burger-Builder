@@ -1,4 +1,7 @@
 import React,{ Component } from "react";
+
+import {connect } from 'react-redux'
+
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css';
@@ -86,13 +89,11 @@ class ContactData extends Component{
                    ]
                 },
                 value:'',
-                validation :{
-
-                },
+                validation :{},
                 valid:true
             },
         },
-        forIsValid:false,
+        formIsValid:false,
         loading: false
     }
 
@@ -126,7 +127,7 @@ class ContactData extends Component{
         }
 
         const order = {
-            ingredients : this.props.ingredients,
+            ingredients : this.props.ings,
             price: this.props.price,
             orderData : formData
         }
@@ -153,10 +154,11 @@ class ContactData extends Component{
         updatedFormElement.valid = this.checkValidity(updatedFormElement.value,updatedFormElement.validation);
         updatedFormElement.touched = true;
         updatedOrderForm[inputIndentifier] = updatedFormElement;
-        console.log(updatedFormElement);
+       // console.log(updatedFormElement);
 
-        let formIsValid = false;
+        let formIsValid = true;
         for(let inputIndentifier in updatedOrderForm){
+            //console.log(formIsValid);
             formIsValid = updatedOrderForm[inputIndentifier].valid && formIsValid;
         }
 
@@ -185,7 +187,7 @@ class ContactData extends Component{
                     touched={formElement.config.touched}
                     elementConfig={formElement.config.elementConfig} value={formElement.config.value}/>
             ))}
-            <Button disabled={!this.state.forIsValid}  btnType="Success">ORDER</Button>
+            <Button disabled={!this.state.formIsValid}  btnType="Success">ORDER</Button>
         </form>);
         if(this.state.loading){
             form = <Spinner />;
@@ -203,6 +205,12 @@ class ContactData extends Component{
 
 
 }
+const mapStateToProps =state=>{
+    return{
+        ings:state.ingredients,
+        price:state.totalPrice
+    }
+}
 
 
-export default ContactData;
+export default connect(mapStateToProps)(ContactData);
