@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Route} from 'react-router-dom';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
 import {connect} from 'react-redux';
 //====================================
 const Checkout = props => {
- 
+    
 //--------------------------------------
   const checkoutCancelledHandler = () => {
     props.history.goBack();
